@@ -104,8 +104,14 @@ public class ReservationService {
         return null;
     }
 
-    public List<Object> getReservationQueue(int id) {
-        return Arrays.asList(findPeoplesInQueue(id), getTimeInterval(id), findReservationById(id));
+    public Map<String, Object> getReservationQueue(int id) {
+        return new HashMap<String, Object>() {
+            {
+                put("placeQueue", findPeoplesInQueue(id));
+                put("timeToService", getTimeInterval(id));
+                put("reservation", findReservationById(id));
+            }
+        };
     }
 
     public List<Reservation> findAllReservationByUserId(Long userId) {
@@ -173,7 +179,7 @@ public class ReservationService {
     public boolean saveReservation(Reservation reservation) throws ParseException {
         SimpleDateFormat GMT_DATE_FORM = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
         Date reservationTime = reservation.getReservation_time();
-        GMT_DATE_FORM.setTimeZone(TimeZone.getTimeZone("GMT+00"));
+        GMT_DATE_FORM.setTimeZone(TimeZone.getTimeZone("GMT+03"));
 
         Calendar calFrom = Calendar.getInstance();
         Calendar calTo = Calendar.getInstance();
@@ -240,8 +246,8 @@ public class ReservationService {
                 return false;
             }
 
+            reservation.setUsers(validateUserRole());
             reservation.setCarServices(carServicesService.findCarServiceById(reservation.getCarServices().getId()));
-            reservation.setUsers(userService.findUserById(reservation.getUsers().getId()));
             reservation.setReservation_time(correctReservationTime);
 
             reservationRepository.save(reservation);
