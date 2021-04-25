@@ -257,6 +257,7 @@ public class ReservationService {
 
     @Transactional
     public void deleteReservation(int id) {
+        System.out.println(111111);
         if (findReservationById(id) != null) {
             reservationRepository.deleteById(id);
         }

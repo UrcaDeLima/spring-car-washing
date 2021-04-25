@@ -20,11 +20,11 @@ public class Reservation {
     @Column(name = "reservation_time")
     private Date reservation_time;
 
-    @ManyToOne (optional=false, cascade=CascadeType.ALL)
+    @ManyToOne (optional=false)
     @JoinColumn (name="users_id")
     private User user;
 
-    @ManyToOne (optional=false, cascade=CascadeType.ALL)
+    @ManyToOne (optional=false)
     @JoinColumn (name="car_services_id")
     private CarServices carServices;
 
