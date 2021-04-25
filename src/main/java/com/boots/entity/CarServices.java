@@ -23,7 +23,7 @@ public class CarServices {
     @Column(name = "price")
     private float price;
 
-    @OneToMany (mappedBy="carServices", fetch=FetchType.EAGER)
+    @OneToMany (mappedBy="carServices", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
     private Collection<Reservation> reservations;
 
     public CarServices() {

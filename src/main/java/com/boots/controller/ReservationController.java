@@ -73,12 +73,12 @@ public class ReservationController {
 	}
 
 	@PostMapping("/deleteReservation")
-	public String deleteReservation(@RequestParam(required = true, defaultValue = "" ) int reservationId,
-							 @RequestParam(required = true, defaultValue = "" ) String action) {
-		System.out.println(reservationId);
+	public String deleteReservation(
+			@RequestParam(required = true, defaultValue = "" ) int reservationId,
+			@RequestParam(required = true, defaultValue = "" ) String action
+	) {
 		if (action.equals("delete")){
 			reservationService.deleteReservation(reservationId);
-			return "redirect:/reservation";
 		}
 		return "redirect:/reservation";
 	}
