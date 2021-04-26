@@ -1,7 +1,7 @@
 package com.boots.controller;
 
 import com.boots.entity.User;
-import com.boots.service.UserService;
+import com.boots.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,8 +15,12 @@ import javax.validation.Valid;
 @Controller
 public class RegistrationController {
 
+    private final UserServiceImpl userServiceImpl;
+
     @Autowired
-    private UserService userService;
+    public RegistrationController(UserServiceImpl userServiceImpl) {
+        this.userServiceImpl = userServiceImpl;
+    }
 
     @GetMapping("/registration")
     public String registration(Model model) {
@@ -39,7 +43,7 @@ public class RegistrationController {
             model.addAttribute("passwordError", "Пароли не совпадают");
             return "registration";
         }
-        if (!userService.saveUser(userForm)){
+        if (!userServiceImpl.saveUser(userForm)){
             model.addAttribute("usernameError", "Пользователь с таким именем уже существует");
             return "registration";
         }

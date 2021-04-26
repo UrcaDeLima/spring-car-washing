@@ -1,6 +1,6 @@
 package com.boots.controller;
 
-import com.boots.service.UserService;
+import com.boots.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,12 +11,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class AdminController {
+    private final UserServiceImpl userServiceImpl;
+
     @Autowired
-    private UserService userService;
+    public AdminController(UserServiceImpl userServiceImpl) {
+        this.userServiceImpl = userServiceImpl;
+    }
 
     @GetMapping("/admin")
     public String userList(Model model) {
-        model.addAttribute("allUsers", userService.allUsers());
+        model.addAttribute("allUsers", userServiceImpl.allUsers());
         return "admin";
     }
 
@@ -24,14 +28,14 @@ public class AdminController {
     public String deleteUser(@RequestParam(required = true, defaultValue = "" ) Long userId,
                               @RequestParam(required = true, defaultValue = "" ) String action) {
         if (action.equals("delete")){
-            userService.deleteUser(userId);
+            userServiceImpl.deleteUser(userId);
         }
         return "redirect:/admin";
     }
 
     @GetMapping("/admin/gt/{userId}")
     public String gtUser(@PathVariable("userId") Long userId, Model model) {
-        model.addAttribute("allUsers", userService.usergtList(userId));
+        model.addAttribute("allUsers", userServiceImpl.usergtList(userId));
         return "admin";
     }
 }

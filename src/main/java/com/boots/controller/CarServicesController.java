@@ -1,7 +1,7 @@
 package com.boots.controller;
 
 import com.boots.entity.CarServices;
-import com.boots.service.CarServicesService;
+import com.boots.service.CarServicesServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,17 +12,17 @@ import java.util.List;
 
 @Controller
 public class CarServicesController {
-	private final CarServicesService carServicesService;
+	private final CarServicesServiceImpl carServicesServiceImpl;
 
 	@Autowired
-	public CarServicesController(CarServicesService carServicesService) {
-		this.carServicesService = carServicesService;
+	public CarServicesController(CarServicesServiceImpl carServicesServiceImpl) {
+		this.carServicesServiceImpl = carServicesServiceImpl;
 	}
 
 	@GetMapping("/carService")
 	public String getAllCarServices(Model model) {
 		List<CarServices> carServices;
-		carServices = carServicesService.getAllCarServices();
+		carServices = carServicesServiceImpl.getAllCarServices();
 		model.addAttribute("carServices", carServices);
 
 		return "carServices";
@@ -37,7 +37,7 @@ public class CarServicesController {
 	) {
 		CarServices newCarService = new CarServices(title, execution_time, price);
 
-		if (!carServicesService.saveCarService(newCarService)){
+		if (!carServicesServiceImpl.saveCarService(newCarService)){
 			model.addAttribute("Error", "Ошибка, проверьте правильность введённых данных");
 			return "newcCarService";
 		}
@@ -51,7 +51,7 @@ public class CarServicesController {
 			@RequestParam(required = true, defaultValue = "" ) String action)
 	{
 		if (action.equals("delete")){
-			carServicesService.deleteCarService(carServiceId);
+			carServicesServiceImpl.deleteCarService(carServiceId);
 		}
 		return "redirect:/carService";
 	}

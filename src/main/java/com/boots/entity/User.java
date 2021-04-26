@@ -1,8 +1,5 @@
 package com.boots.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,14 +14,19 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Size(min=2, message = "Не меньше 5 знаков")
     private String username;
+
     @Size(min=2, message = "Не меньше 5 знаков")
     private String password;
+
     @Transient
     private String passwordConfirm;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
+
     @OneToMany (mappedBy="user", fetch=FetchType.EAGER)
     private Set<Reservation> reservations;
 
