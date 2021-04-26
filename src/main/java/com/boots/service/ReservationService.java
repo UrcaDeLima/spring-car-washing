@@ -4,6 +4,7 @@ import com.boots.entity.Reservation;
 import com.boots.entity.Role;
 import com.boots.entity.User;
 import com.boots.repository.ReservationRepository;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -13,13 +14,14 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
 
-import static java.lang.Integer.parseInt;
+import java.util.*;
 
 @Service
 public class ReservationService {
@@ -40,7 +42,7 @@ public class ReservationService {
     }
 
     public Reservation findReservationById(int reservationId) {
-        User user = validateUserRole();
+        User user = getCurrentUser();
 
         switch(getMaxRole(user)){
             case(1):
@@ -145,7 +147,7 @@ public class ReservationService {
     }
 
     public List<Reservation> getAllReservations() {
-        User user = validateUserRole();
+        User user = getCurrentUser();
 
         switch(getMaxRole(user)){
             case(1):
@@ -165,7 +167,7 @@ public class ReservationService {
         return Math.toIntExact(Collections.max(rolesId));
     }
 
-    public User validateUserRole() {
+    public User getCurrentUser() {
         String username = getCurrentUsername();
         return userService.loadUserByUsername(username);
     }
@@ -246,7 +248,7 @@ public class ReservationService {
                 return false;
             }
 
-            reservation.setUsers(validateUserRole());
+            reservation.setUsers(getCurrentUser());
             reservation.setCarServices(carServicesService.findCarServiceById(reservation.getCarServices().getId()));
             reservation.setReservation_time(correctReservationTime);
 
@@ -257,7 +259,6 @@ public class ReservationService {
 
     @Transactional
     public void deleteReservation(int id) {
-        System.out.println(111111);
         if (findReservationById(id) != null) {
             reservationRepository.deleteById(id);
         }
