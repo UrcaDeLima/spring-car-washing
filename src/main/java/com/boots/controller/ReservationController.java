@@ -3,6 +3,7 @@ package com.boots.controller;
 import com.boots.entity.CarServices;
 import com.boots.entity.Reservation;
 import com.boots.entity.User;
+import com.boots.service.ReservationService;
 import com.boots.service.ReservationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,17 +17,17 @@ import java.util.Map;
 
 @Controller
 public class ReservationController {
-	private final ReservationServiceImpl reservationServiceImpl;
+	private final ReservationService reservationService;
 
 	@Autowired
 	public ReservationController(ReservationServiceImpl reservationServiceImpl) {
-		this.reservationServiceImpl = reservationServiceImpl;
+		this.reservationService = reservationServiceImpl;
 	}
 
 	@GetMapping("/reservation")
 	public String getAllReservations(Model model) {
 		List<Reservation> reservations;
-		reservations = reservationServiceImpl.getAllReservations();
+		reservations = reservationService.getAllReservations();
 		model.addAttribute("reservations", reservations);
 
 		return "reservation";
@@ -34,7 +35,7 @@ public class ReservationController {
 
 	@GetMapping("/reservation/{id}")
 	public String getReservationById(@PathVariable(value = "id") int reservationId, Model model) {
-		Map<String, Object> map = reservationServiceImpl.getReservationQueue(reservationId);
+		Map<String, Object> map = reservationService.getReservationQueue(reservationId);
 		if(map.get("reservation") == null){
 			model.addAttribute("Error", "Ошибка, неверный id");
 			return "error";
@@ -64,7 +65,7 @@ public class ReservationController {
 		Date from = MY_SIMPLE_DATE_FORMAT.parse(date);
 		newReservation.setReservation_time(from);
 
-		if (!reservationServiceImpl.saveReservation(newReservation)){
+		if (!reservationService.saveReservation(newReservation)){
 			model.addAttribute("Error", "Ошибка, проверьте правильность введённых данных");
 			return "newReservation";
 		}
@@ -78,7 +79,7 @@ public class ReservationController {
 			@RequestParam(required = true, defaultValue = "" ) String action
 	) {
 		if (action.equals("delete")){
-			reservationServiceImpl.deleteReservation(reservationId);
+			reservationService.deleteReservation(reservationId);
 		}
 		return "redirect:/reservation";
 	}

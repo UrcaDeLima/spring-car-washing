@@ -9,4 +9,5 @@ public interface UserService {
     List<User> allUsers();
     boolean saveUser(User user);
     void deleteUser(Long userId);
+    public List<User> usergtList(Long idMin);
 }
